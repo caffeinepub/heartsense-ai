@@ -1,0 +1,87 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "Project: HeartSense AI — a web page/web app to present and apply a Smart CVD (cardiovascular disease) risk prediction project.",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "imageRequirements": "## Required Images\n- Minimal heart + pulse line logo, flat vector style, warm health palette (heartsense-logo.dim_512x512.png)\n- Hero illustration of a heart with subtle medical UI elements (charts/metrics) in a clean flat style (heartsense-hero.dim_1600x900.png)\n- Small set of 3 simple line icons: shield/health, chart, checklist, consistent stroke style (heartsense-icons.dim_512x512.png)",
+  "existing_features": [
+    {
+      "id": "feature-create-a-public-facing-landing-page-for-heartsense-ai-smart-cvd-risk-prediction-that-explains-the-project-what-it-does-who-it-s-for-and-how-to-use-it-and-includes-a-clear-call-to-action-to-start-a-risk-assessment",
+      "title": "Create a public-facing landing page for “HeartSense AI: Smart CVD Risk Prediction” that explains the project (what it does, who it’s for, and how to use it) and includes a clear call-to-action to start a risk assessment.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-cvd-risk-assessment-form-page-where-a-user-can-enter-typical-risk-factor-inputs-at-minimum-age-sex-systolic-blood-pressure-total-cholesterol-hdl-cholesterol-smoking-status-diabetes-status-and-submit-to-get-a-prediction-result",
+      "title": "Implement a CVD risk assessment form page where a user can enter typical risk-factor inputs (at minimum: age, sex, systolic blood pressure, total cholesterol, HDL cholesterol, smoking status, diabetes status) and submit to get a prediction result.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-connect-the-assessment-form-submission-to-the-backend-prediction-api-using-the-project-s-standard-frontend-data-fetching-pattern-react-query-and-render-a-results-page-section-showing-riskscore-risklevel-and-the-explanation-list-plus-a-start-over-option",
+      "title": "Connect the assessment form submission to the backend prediction API using the project’s standard frontend data-fetching pattern (React Query) and render a results page/section showing riskScore, riskLevel, and the explanation list, plus a “Start Over” option.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-medical-educational-disclaimer-component-shown-on-both-the-landing-page-and-the-results-view-stating-the-output-is-for-informational-educational-purposes-and-not-medical-advice-diagnosis-or-treatment",
+      "title": "Add a medical/educational disclaimer component shown on both the landing page and the results view stating the output is for informational/educational purposes and not medical advice, diagnosis, or treatment.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-coherent-visual-theme-for-heartsense-ai-across-the-app-colors-typography-spacing-components-with-an-accessible-health-oriented-style-avoid-blue-purple-as-primary-colors-and-consistent-layout-for-navigation-content-sections-and-the-form-results",
+      "title": "Apply a coherent visual theme for HeartSense AI across the app (colors, typography, spacing, components) with an accessible, health-oriented style (avoid blue/purple as primary colors) and consistent layout for navigation, content sections, and the form/results.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-basic-site-navigation-header-with-app-name-and-links-to-home-and-assessment-and-a-footer-with-project-info-e-g-heartsense-ai-and-the-disclaimer-link-summary",
+      "title": "Add basic site navigation (header with app name and links to Home and Assessment) and a footer with project info (e.g., “HeartSense AI”) and the disclaimer link/summary.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-generated-static-image-assets-for-heartsense-ai-logo-and-simple-health-themed-hero-illustration-and-render-them-in-the-ui-from-frontend-public-assets-generated-do-not-serve-images-from-the-backend",
+      "title": "Add generated static image assets for HeartSense AI (logo and simple health-themed hero illustration) and render them in the UI from frontend/public/assets/generated (do not serve images from the backend).",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Create a related web page/web app for the HeartSense AI Smart CVD Risk Prediction project (to present/apply the project).",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add a backend prediction API in the single Motoko actor that accepts the assessment inputs and returns a deterministic risk result containing: numeric riskScore (0–100), riskLevel (Low/Moderate/High), and an explanation array describing the main contributing factors based on the submitted inputs.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "HeartSense AI",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

@@ -1,0 +1,142 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-create-a-public-facing-landing-page-for-heartsense-ai-smart-cvd-risk-prediction-that-explains-the-project-what-it-does-who-it-s-for-and-how-to-use-it-and-includes-a-clear-call-to-action-to-start-a-risk-assessment",
+      "featureTitle": "Create a public-facing landing page for “HeartSense AI: Smart CVD Risk Prediction” that explains the project (what it does, who it’s for, and how to use it) and includes a clear call-to-action to start a risk assessment.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/LandingPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-a-cvd-risk-assessment-form-page-where-a-user-can-enter-typical-risk-factor-inputs-at-minimum-age-sex-systolic-blood-pressure-total-cholesterol-hdl-cholesterol-smoking-status-diabetes-status-and-submit-to-get-a-prediction-result",
+      "featureTitle": "Implement a CVD risk assessment form page where a user can enter typical risk-factor inputs (at minimum: age, sex, systolic blood pressure, total cholesterol, HDL cholesterol, smoking status, diabetes status) and submit to get a prediction result.",
+      "files": [
+        "frontend/src/pages/AssessmentPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-connect-the-assessment-form-submission-to-the-backend-prediction-api-using-the-project-s-standard-frontend-data-fetching-pattern-react-query-and-render-a-results-page-section-showing-riskscore-risklevel-and-the-explanation-list-plus-a-start-over-option",
+      "featureTitle": "Connect the assessment form submission to the backend prediction API using the project’s standard frontend data-fetching pattern (React Query) and render a results page/section showing riskScore, riskLevel, and the explanation list, plus a “Start Over” option.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/pages/AssessmentPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-medical-educational-disclaimer-component-shown-on-both-the-landing-page-and-the-results-view-stating-the-output-is-for-informational-educational-purposes-and-not-medical-advice-diagnosis-or-treatment",
+      "featureTitle": "Add a medical/educational disclaimer component shown on both the landing page and the results view stating the output is for informational/educational purposes and not medical advice, diagnosis, or treatment.",
+      "files": [
+        "frontend/src/components/Disclaimer.tsx",
+        "frontend/src/pages/AssessmentPage.tsx",
+        "frontend/src/pages/LandingPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-apply-a-coherent-visual-theme-for-heartsense-ai-across-the-app-colors-typography-spacing-components-with-an-accessible-health-oriented-style-avoid-blue-purple-as-primary-colors-and-consistent-layout-for-navigation-content-sections-and-the-form-results",
+      "featureTitle": "Apply a coherent visual theme for HeartSense AI across the app (colors, typography, spacing, components) with an accessible, health-oriented style (avoid blue/purple as primary colors) and consistent layout for navigation, content sections, and the form/results.",
+      "files": [
+        "frontend/src/index.css",
+        "frontend/src/pages/AssessmentPage.tsx",
+        "frontend/src/pages/LandingPage.tsx",
+        "frontend/tailwind.config.js"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-basic-site-navigation-header-with-app-name-and-links-to-home-and-assessment-and-a-footer-with-project-info-e-g-heartsense-ai-and-the-disclaimer-link-summary",
+      "featureTitle": "Add basic site navigation (header with app name and links to Home and Assessment) and a footer with project info (e.g., “HeartSense AI”) and the disclaimer link/summary.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/AppFooter.tsx",
+        "frontend/src/components/AppHeader.tsx",
+        "frontend/src/components/AppLayout.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-generated-static-image-assets-for-heartsense-ai-logo-and-simple-health-themed-hero-illustration-and-render-them-in-the-ui-from-frontend-public-assets-generated-do-not-serve-images-from-the-backend",
+      "featureTitle": "Add generated static image assets for HeartSense AI (logo and simple health-themed hero illustration) and render them in the UI from frontend/public/assets/generated (do not serve images from the backend).",
+      "files": [
+        "frontend/src/components/AppHeader.tsx",
+        "frontend/src/pages/LandingPage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-8"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

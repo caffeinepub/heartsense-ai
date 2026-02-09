@@ -1,0 +1,12 @@
+{
+  "frontend/src/App.tsx": "Main application component that sets up TanStack Router with routes for landing page (/) and assessment page (/assessment), wrapped in AppLayout for consistent header/footer across all pages.",
+  "frontend/src/components/AppLayout.tsx": "Layout shell component that wraps all pages with AppHeader, main content area with Outlet for routed content, and AppFooter for consistent site-wide structure.",
+  "frontend/src/components/AppHeader.tsx": "Sticky header component displaying HeartSense AI logo and branding with navigation links to Home and Start Assessment, using responsive design and theme-aware styling.",
+  "frontend/src/components/AppFooter.tsx": "Footer component with HeartSense AI branding, medical disclaimer summary, and attribution including caffeine.ai link with heart icon.",
+  "frontend/src/components/Disclaimer.tsx": "Reusable medical disclaimer component styled as an alert with warning icon, clearly stating the tool is for educational purposes only and not medical advice.",
+  "frontend/src/pages/LandingPage.tsx": "Landing page featuring hero section with CTA, overview cards explaining comprehensive analysis/risk scoring/insights, how-it-works 4-step process, and full disclaimer section with smooth scroll navigation.",
+  "frontend/src/pages/AssessmentPage.tsx": "Assessment form page collecting age, gender, smoking status, and respiratory symptoms (cough, wheezing, shortness of breath, etc.), with validation, submission to backend via React Query, and inline results display showing risk score/level/explanation with start-over functionality.",
+  "frontend/src/hooks/useQueries.ts": "React Query mutation hook for calling the backend calculateRisk method, handling the assessment input submission and returning the risk assessment result.",
+  "frontend/src/index.css": "Global styles with OKLCH color system defining health-oriented theme tokens (neutral grays with teal/cyan health accent color) for both light and dark modes, avoiding blue/purple primaries.",
+  "frontend/tailwind.config.js": "Tailwind configuration extending theme with custom health color token, consistent border radius (0.75rem), and maintaining all shadcn/ui color mappings to CSS variables."
+}
