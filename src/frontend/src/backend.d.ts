@@ -9,6 +9,10 @@ export interface None {
 export type Option<T> = Some<T> | None;
 export interface AssessmentInput {
     age: bigint;
+    bloodPressure?: {
+        value: bigint;
+        pressureType: BloodPressureType;
+    };
     smoking: Variant_none_current_former;
     symptomsFactor: {
         difficultySwallowing: boolean;
@@ -16,7 +20,7 @@ export interface AssessmentInput {
         cough: boolean;
         wheezing: boolean;
         shortnessOfBreath: boolean;
-        unexplainedWeightLoss: boolean;
+        unexplained_weight_loss: boolean;
         stridor: boolean;
     };
     gender: Variant_female_male;
@@ -29,6 +33,11 @@ export interface AssessmentResult {
     explanation: Array<RiskFactor>;
     riskLevel: RiskLevel;
     riskScore: bigint;
+}
+export enum BloodPressureType {
+    systolic = "systolic",
+    diastolic = "diastolic",
+    meanArterialPressure = "meanArterialPressure"
 }
 export enum RiskLevel {
     low = "low",

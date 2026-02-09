@@ -1,189 +1,27 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "HeartSense AI: Smart CVD Risk Prediction (Frontend)",
+  "title": "Update footer LinkedIn link configuration and hide when unset",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Create a public landing page explaining HeartSense AI with a clear CTA to start an assessment.",
+      "id": "REQ-19",
+      "summary": "Remove the incorrect hardcoded LinkedIn URL from the footer and render the LinkedIn link only when a valid replacement URL is configured.",
       "acceptanceCriteria": [
-        "Landing page renders with the title “HeartSense AI” and subtitle “Smart CVD Risk Prediction”.",
-        "Page includes sections: Overview, How it works, Disclaimer, and a prominent “Start Assessment” button that navigates to the assessment form.",
-        "All user-facing text is in English."
+        "The footer no longer contains any anchor tag with href=\"https://www.linkedin.com/in/sunil-biradar\".",
+        "If a valid replacement LinkedIn URL is configured, the footer LinkedIn button/link navigates to that URL in a new tab (target=\"_blank\" with rel=\"noopener noreferrer\").",
+        "If no replacement LinkedIn URL is configured, the LinkedIn icon/link is not shown in the footer (email link remains visible).",
+        "All user-facing text remains in English."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/LandingPage.tsx",
+          "path": "frontend/src/config/socialLinks.ts",
           "operation": "create",
-          "description": "Implement the public landing page content (title/subtitle, Overview, How it works, Disclaimer section) and a “Start Assessment” CTA that navigates to the assessment route. Use shadcn-ui components (e.g., Card, Button, Separator) for consistent layout and emphasis. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "create",
-          "description": "Add app routing/wiring so the landing page is the home route and the “Start Assessment” CTA navigates to the assessment page. Ensure the new page is not orphaned."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Implement a CVD risk assessment form page with required risk-factor inputs, validation, and inline errors.",
-      "acceptanceCriteria": [
-        "Form includes the minimum fields listed in the requirement with sensible input types (number/radio/select) and client-side validation (required fields, reasonable min/max).",
-        "On submit, the UI shows a loading state and then displays a result view without a full page reload.",
-        "If validation fails, the user sees clear inline error messages."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/AssessmentPage.tsx",
-          "operation": "create",
-          "description": "Build the assessment form UI with fields: age, sex, systolic blood pressure, total cholesterol, HDL cholesterol, smoking status, diabetes status. Add client-side validation (required + reasonable ranges) and inline error rendering. Use shadcn-ui form building blocks (Input, Label, Select/RadioGroup, Button, Card) for accessible controls and consistent styling. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Submit assessment via React Query to the backend risk calculation capability and render results with a Start Over action.",
-      "acceptanceCriteria": [
-        "Submitting the form calls the backend prediction API and displays the returned values.",
-        "Result UI displays: riskLevel, riskScore, and explanation items in a readable layout.",
-        "User can reset the form and run another assessment via a “Start Over” action."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useRiskPrediction.ts",
-          "operation": "create",
-          "description": "Implement the project’s standard React Query pattern for submitting an assessment and returning a result. Use the existing useActor hook to access the backend actor and call the backend risk calculation capability, mapping the form fields to the backend input shape as implemented. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/AssessmentPage.tsx",
-          "operation": "modify",
-          "description": "Wire form submission to the React Query mutation hook; show a loading/disabled state during submission; render an in-page results section (no full reload) displaying riskScore, riskLevel, and an explanation list. Provide a “Start Over” action that clears the result and resets form state. Use shadcn-ui components (e.g., Alert, Badge, Progress, Card) for readable results presentation. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Ensure the assessment route is registered and navigable from the landing CTA and the header navigation; keep results rendering within the assessment view/route per requirement (no additional top-level routes unless needed)."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Add a reusable medical/educational disclaimer component and show it on landing and results views.",
-      "acceptanceCriteria": [
-        "Disclaimer text is visible on landing and results views.",
-        "Disclaimer is written in clear English and does not claim clinical accuracy or diagnosis."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/Disclaimer.tsx",
-          "operation": "create",
-          "description": "Create a reusable Disclaimer component with clear educational-only wording (not medical advice/diagnosis/treatment). Use shadcn-ui typography utilities/components as appropriate for consistent styling. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
-          "operation": "modify",
-          "description": "Render the Disclaimer component in the landing page’s Disclaimer section. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/AssessmentPage.tsx",
-          "operation": "modify",
-          "description": "Render the Disclaimer component in the results view/section (and optionally near the form submit area) so it is visible when results are shown. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Apply a coherent, accessible, health-oriented visual theme (avoid blue/purple as primary) across landing, form, and results.",
-      "acceptanceCriteria": [
-        "A consistent color palette and typography are applied across landing, form, and results views.",
-        "Primary UI elements (buttons, inputs, headings, cards) follow a unified style.",
-        "Color contrast is sufficient for readable text and form labels."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/index.css",
-          "operation": "create",
-          "description": "Define global theme tokens (CSS variables used by Tailwind/shadcn-ui) for a warm, health-oriented palette (avoid blue/purple as primary), plus consistent typography and spacing defaults. Ensure sufficient contrast for text and form labels. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
-          "operation": "modify",
-          "description": "Align landing page sections/typography to the global theme using consistent spacing, headings, and card styles via Tailwind + shadcn-ui components. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/pages/AssessmentPage.tsx",
-          "operation": "modify",
-          "description": "Align form and results layouts to the global theme using consistent spacing, headings, input/button styles via Tailwind + shadcn-ui components. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/tailwind.config.js",
-          "operation": "modify",
-          "description": "If needed, adjust Tailwind theme extensions (e.g., radius/shadows/typography defaults) to support a consistent HeartSense AI look while continuing to rely on CSS variable-driven color tokens."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Add site-wide header navigation (Home, Assessment) and a footer with project info and disclaimer reference.",
-      "acceptanceCriteria": [
-        "Header navigation works and clearly indicates how to reach the assessment form from any page.",
-        "Footer appears on all main views and includes project name and a disclaimer reference."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/AppHeader.tsx",
-          "operation": "create",
-          "description": "Create a header with HeartSense AI branding and navigation links to Home and Assessment. Use shadcn-ui components (e.g., Button, NavigationMenu) where appropriate for accessible navigation. Verify the component's usage instructions before implementing."
+          "description": "Add a small configuration helper that reads a build-time LinkedIn URL (for example via a Vite env var) and validates it; export a safe value (undefined when missing/invalid) so the footer can hide the LinkedIn link when not configured."
         },
         {
           "path": "frontend/src/components/AppFooter.tsx",
-          "operation": "create",
-          "description": "Create a footer shown on all main views with “HeartSense AI” project info and a short disclaimer reference/summary. Use shadcn-ui typography utilities/components as appropriate. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/components/AppLayout.tsx",
-          "operation": "create",
-          "description": "Create an app layout shell that composes AppHeader + main content container + AppFooter to ensure consistent layout across landing and assessment pages. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Wrap routed pages with AppLayout so header/footer appear across the landing and assessment views, and ensure navigation links work from any page."
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Add generated static image assets (logo, hero, icons) under frontend/public/assets/generated and render them in the UI (no backend image hosting).",
-      "acceptanceCriteria": [
-        "Images listed in imageRequirements.required exist in frontend/public/assets/generated and are referenced by the landing page (and logo by header).",
-        "App builds and runs without requiring backend image hosting."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/public/assets/generated/heartsense-logo.dim_512x512.png",
-          "operation": "create",
-          "description": "Add the generated static logo asset file at frontend/public/assets/generated/heartsense-logo.dim_512x512.png (Minimal heart + pulse line logo, flat vector style, warm health palette)."
-        },
-        {
-          "path": "frontend/public/assets/generated/heartsense-hero.dim_1600x900.png",
-          "operation": "create",
-          "description": "Add the generated static hero illustration asset file at frontend/public/assets/generated/heartsense-hero.dim_1600x900.png (heart with subtle medical UI elements in clean flat style)."
-        },
-        {
-          "path": "frontend/public/assets/generated/heartsense-icons.dim_512x512.png",
-          "operation": "create",
-          "description": "Add the generated static icons sheet asset file at frontend/public/assets/generated/heartsense-icons.dim_512x512.png (3 simple line icons: shield/health, chart, checklist)."
-        },
-        {
-          "path": "frontend/src/components/AppHeader.tsx",
-          "operation": "modify",
-          "description": "Render the logo image from frontend/public/assets/generated/heartsense-logo.dim_512x512.png in the header branding area with appropriate alt text and sizing."
-        },
-        {
-          "path": "frontend/src/pages/LandingPage.tsx",
-          "operation": "modify",
-          "description": "Render the hero illustration from frontend/public/assets/generated/heartsense-hero.dim_1600x900.png in the landing hero section and incorporate the icons asset from frontend/public/assets/generated/heartsense-icons.dim_512x512.png to visually support the Overview/How it works sections."
+          "description": "Replace the hardcoded LinkedIn anchor (currently pointing to the incorrect URL) with conditional rendering driven by the configured/validated LinkedIn URL; ensure that when rendered it uses target=\"_blank\" and rel=\"noopener noreferrer\", and when not configured it does not render any LinkedIn link while keeping the email link unchanged."
         }
       ]
     }

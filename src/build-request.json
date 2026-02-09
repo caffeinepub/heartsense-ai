@@ -1,167 +1,49 @@
 {
   "kind": "build_request",
-  "title": "HeartSense AI web app for Smart CVD Risk Prediction",
+  "title": "Update footer LinkedIn link to the correct account",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Create a public-facing landing page for “HeartSense AI: Smart CVD Risk Prediction” that explains the project (what it does, who it’s for, and how to use it) and includes a clear call-to-action to start a risk assessment.",
+      "id": "REQ-19",
+      "text": "Update the Project Owner LinkedIn link in the footer to remove the incorrect LinkedIn URL currently pointing to \"https://www.linkedin.com/in/sunil-biradar\" and replace it with the user’s correct LinkedIn profile URL. If the correct URL is not yet provided at build time, hide the LinkedIn link entirely (do not render a broken/incorrect link) until a valid URL is configured.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-1"
         ],
         "quotes": [
-          "HeartSense AI : Smart CVD Risk Prediction i am doing this project i want related web page to appy my project"
+          "in the project the linkdin was not my account please remove and add my linkdin aaccount"
         ]
       },
       "acceptanceCriteria": [
-        "Landing page renders with the title “HeartSense AI” and subtitle “Smart CVD Risk Prediction”.",
-        "Page includes sections: Overview, How it works, Disclaimer, and a prominent “Start Assessment” button that navigates to the assessment form.",
-        "All user-facing text is in English."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Implement a CVD risk assessment form page where a user can enter typical risk-factor inputs (at minimum: age, sex, systolic blood pressure, total cholesterol, HDL cholesterol, smoking status, diabetes status) and submit to get a prediction result.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "i want related web page to appy my project"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Form includes the minimum fields listed in the requirement with sensible input types (number/radio/select) and client-side validation (required fields, reasonable min/max).",
-        "On submit, the UI shows a loading state and then displays a result view without a full page reload.",
-        "If validation fails, the user sees clear inline error messages."
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Add a backend prediction API in the single Motoko actor that accepts the assessment inputs and returns a deterministic risk result containing: numeric riskScore (0–100), riskLevel (Low/Moderate/High), and an explanation array describing the main contributing factors based on the submitted inputs.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Smart CVD Risk Prediction"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend exposes a single callable method (e.g., predict) that takes the required inputs and returns { riskScore; riskLevel; explanation }.",
-        "Returned riskScore is always clamped to 0–100 and riskLevel is one of: Low, Moderate, High.",
-        "Explanation contains at least 2 human-readable strings describing how inputs influenced the result (e.g., “Higher systolic BP increases risk”)."
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Connect the assessment form submission to the backend prediction API using the project’s standard frontend data-fetching pattern (React Query) and render a results page/section showing riskScore, riskLevel, and the explanation list, plus a “Start Over” option.",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "i want related web page to appy my project"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Submitting the form calls the backend prediction API and displays the returned values.",
-        "Result UI displays: riskLevel, riskScore, and explanation items in a readable layout.",
-        "User can reset the form and run another assessment via a “Start Over” action."
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Add a medical/educational disclaimer component shown on both the landing page and the results view stating the output is for informational/educational purposes and not medical advice, diagnosis, or treatment.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "Smart CVD Risk Prediction"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Disclaimer text is visible on landing and results views.",
-        "Disclaimer is written in clear English and does not claim clinical accuracy or diagnosis."
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Apply a coherent visual theme for HeartSense AI across the app (colors, typography, spacing, components) with an accessible, health-oriented style (avoid blue/purple as primary colors) and consistent layout for navigation, content sections, and the form/results.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "HeartSense AI : Smart CVD Risk Prediction"
-        ]
-      },
-      "acceptanceCriteria": [
-        "A consistent color palette and typography are applied across landing, form, and results views.",
-        "Primary UI elements (buttons, inputs, headings, cards) follow a unified style.",
-        "Color contrast is sufficient for readable text and form labels."
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Add basic site navigation (header with app name and links to Home and Assessment) and a footer with project info (e.g., “HeartSense AI”) and the disclaimer link/summary.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "i want related web page"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Header navigation works and clearly indicates how to reach the assessment form from any page.",
-        "Footer appears on all main views and includes project name and a disclaimer reference."
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "text": "Add generated static image assets for HeartSense AI (logo and simple health-themed hero illustration) and render them in the UI from frontend/public/assets/generated (do not serve images from the backend).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-1"
-        ],
-        "quotes": [
-          "HeartSense AI : Smart CVD Risk Prediction"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Images listed in imageRequirements.required exist in frontend/public/assets/generated and are referenced by the landing page (and logo by header).",
-        "App builds and runs without requiring backend image hosting."
+        "The footer no longer contains any anchor tag with href=\"https://www.linkedin.com/in/sunil-biradar\".",
+        "If a valid replacement LinkedIn URL is configured, the footer LinkedIn button/link navigates to that URL in a new tab (target=\"_blank\" with rel=\"noopener noreferrer\").",
+        "If no replacement LinkedIn URL is configured, the LinkedIn icon/link is not shown in the footer (email link remains visible).",
+        "All user-facing text remains in English."
       ]
     }
   ],
   "constraints": [
-    "Use a single Motoko actor for all backend logic.",
-    "Do not edit files under frontend immutable paths (frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui); compose/reuse them instead.",
-    "Use English for all user-facing text."
+    "Do not edit any files under frontend/src/components/ui (Shadcn UI components are read-only).",
+    "Keep all backend logic in the single Motoko actor (no backend changes are required for this request)."
   ],
   "nonGoals": [
-    "Integrating or training a real ML model for CVD prediction (this build uses a deterministic scoring approach suitable as a placeholder/demo).",
-    "Clinical validation, regulatory/medical-device compliance, or guaranteeing medical accuracy.",
-    "Third-party authentication providers (only Internet Identity is supported, and it is not required for this initial web page unless later requested).",
-    "External databases or non-Internet-Computer backends."
+    "Do not change the project owner name or email address in the footer.",
+    "Do not add new authentication, analytics, or third-party integrations.",
+    "Do not modify landing/assessment page content beyond what is necessary to remove/replace the incorrect LinkedIn link."
   ],
   "imageRequirements": {
-    "required": [
-      "Minimal heart + pulse line logo, flat vector style, warm health palette (heartsense-logo.dim_512x512.png)",
-      "Hero illustration of a heart with subtle medical UI elements (charts/metrics) in a clean flat style (heartsense-hero.dim_1600x900.png)",
-      "Small set of 3 simple line icons: shield/health, chart, checklist, consistent stroke style (heartsense-icons.dim_512x512.png)"
-    ],
+    "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

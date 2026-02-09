@@ -10,17 +10,27 @@ actor {
     detail : Text;
   };
 
+  public type BloodPressureType = {
+    #systolic;
+    #diastolic;
+    #meanArterialPressure;
+  };
+
   type AssessmentInput = {
     age : Nat;
     gender : { #male; #female };
     smoking : { #none; #former; #current };
+    bloodPressure : ?{
+      pressureType : BloodPressureType;
+      value : Nat;
+    };
     symptomsFactor : {
       cough : Bool;
       wheezing : Bool;
       shortnessOfBreath : Bool;
       stridor : Bool;
       difficultySwallowing : Bool;
-      unexplainedWeightLoss : Bool;
+      unexplained_weight_loss : Bool;
       bloodInSputum : Bool;
     };
   };
@@ -68,6 +78,23 @@ actor {
       Runtime.trap("Invalid age");
     };
 
+    let bloodPressureFactor : Nat = switch (assessmentInput.bloodPressure) {
+      case (null) { 0 };
+      case (?(bp)) {
+        switch (bp.pressureType) {
+          case (#systolic) {
+            if (bp.value > 140) { 2 } else { 0 };
+          };
+          case (#diastolic) {
+            if (bp.value > 90) { 2 } else { 0 };
+          };
+          case (#meanArterialPressure) {
+            if (bp.value > 100) { 2 } else { 0 };
+          };
+        };
+      };
+    };
+
     let smokingFactor = switch (assessmentInput.smoking) {
       case (#none) { 0 };
       case (#former) { 1 };
@@ -88,10 +115,10 @@ actor {
       if (b) { 2 } else { 0 };
     };
 
-    let highRiskSymptomsFactor = boolToTwo(assessmentInput.symptomsFactor.unexplainedWeightLoss) +
+    let highRiskSymptomsFactor = boolToTwo(assessmentInput.symptomsFactor.unexplained_weight_loss) +
       boolToTwo(assessmentInput.symptomsFactor.bloodInSputum);
 
-    let totalRiskScore = (ageFactor + smokingFactor + symptomsFactor + highRiskSymptomsFactor) * 10;
+    let totalRiskScore = (ageFactor + bloodPressureFactor + smokingFactor + symptomsFactor + highRiskSymptomsFactor) * 10;
 
     let riskLevel = if (totalRiskScore >= 0 and totalRiskScore <= 40) {
       #low;
@@ -107,6 +134,14 @@ actor {
           Iter.singleton({
             category = "Age Factor";
             detail = "Higher age increases risk";
+          });
+        } else { Iter.empty<RiskFactor>() }
+      )
+      .concat(
+        if (bloodPressureFactor > 0) {
+          Iter.singleton({
+            category = "Blood Pressure";
+            detail = "Higher blood pressure increases risk";
           });
         } else { Iter.empty<RiskFactor>() }
       )

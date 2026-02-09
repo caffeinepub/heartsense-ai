@@ -91,6 +91,10 @@ export class ExternalBlob {
 }
 export interface AssessmentInput {
     age: bigint;
+    bloodPressure?: {
+        value: bigint;
+        pressureType: BloodPressureType;
+    };
     smoking: Variant_none_current_former;
     symptomsFactor: {
         difficultySwallowing: boolean;
@@ -98,7 +102,7 @@ export interface AssessmentInput {
         cough: boolean;
         wheezing: boolean;
         shortnessOfBreath: boolean;
-        unexplainedWeightLoss: boolean;
+        unexplained_weight_loss: boolean;
         stridor: boolean;
     };
     gender: Variant_female_male;
@@ -111,6 +115,11 @@ export interface AssessmentResult {
     explanation: Array<RiskFactor>;
     riskLevel: RiskLevel;
     riskScore: bigint;
+}
+export enum BloodPressureType {
+    systolic = "systolic",
+    diastolic = "diastolic",
+    meanArterialPressure = "meanArterialPressure"
 }
 export enum RiskLevel {
     low = "low",
@@ -130,45 +139,45 @@ export interface backendInterface {
     calculateRisk(assessmentInput: AssessmentInput): Promise<AssessmentResult>;
     riskLevelToText(level: RiskLevel): Promise<string>;
 }
-import type { AssessmentInput as _AssessmentInput, AssessmentResult as _AssessmentResult, RiskFactor as _RiskFactor, RiskLevel as _RiskLevel } from "./declarations/backend.did.d.ts";
+import type { AssessmentInput as _AssessmentInput, AssessmentResult as _AssessmentResult, BloodPressureType as _BloodPressureType, RiskFactor as _RiskFactor, RiskLevel as _RiskLevel } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
     async calculateRisk(arg0: AssessmentInput): Promise<AssessmentResult> {
         if (this.processError) {
             try {
                 const result = await this.actor.calculateRisk(to_candid_AssessmentInput_n1(this._uploadFile, this._downloadFile, arg0));
-                return from_candid_AssessmentResult_n5(this._uploadFile, this._downloadFile, result);
+                return from_candid_AssessmentResult_n8(this._uploadFile, this._downloadFile, result);
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
             const result = await this.actor.calculateRisk(to_candid_AssessmentInput_n1(this._uploadFile, this._downloadFile, arg0));
-            return from_candid_AssessmentResult_n5(this._uploadFile, this._downloadFile, result);
+            return from_candid_AssessmentResult_n8(this._uploadFile, this._downloadFile, result);
         }
     }
     async riskLevelToText(arg0: RiskLevel): Promise<string> {
         if (this.processError) {
             try {
-                const result = await this.actor.riskLevelToText(to_candid_RiskLevel_n9(this._uploadFile, this._downloadFile, arg0));
+                const result = await this.actor.riskLevelToText(to_candid_RiskLevel_n12(this._uploadFile, this._downloadFile, arg0));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.riskLevelToText(to_candid_RiskLevel_n9(this._uploadFile, this._downloadFile, arg0));
+            const result = await this.actor.riskLevelToText(to_candid_RiskLevel_n12(this._uploadFile, this._downloadFile, arg0));
             return result;
         }
     }
 }
-function from_candid_AssessmentResult_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _AssessmentResult): AssessmentResult {
-    return from_candid_record_n6(_uploadFile, _downloadFile, value);
+function from_candid_AssessmentResult_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _AssessmentResult): AssessmentResult {
+    return from_candid_record_n9(_uploadFile, _downloadFile, value);
 }
-function from_candid_RiskLevel_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _RiskLevel): RiskLevel {
-    return from_candid_variant_n8(_uploadFile, _downloadFile, value);
+function from_candid_RiskLevel_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _RiskLevel): RiskLevel {
+    return from_candid_variant_n11(_uploadFile, _downloadFile, value);
 }
-function from_candid_record_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_record_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     explanation: Array<_RiskFactor>;
     riskLevel: _RiskLevel;
     riskScore: bigint;
@@ -179,11 +188,11 @@ function from_candid_record_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint
 } {
     return {
         explanation: value.explanation,
-        riskLevel: from_candid_RiskLevel_n7(_uploadFile, _downloadFile, value.riskLevel),
+        riskLevel: from_candid_RiskLevel_n10(_uploadFile, _downloadFile, value.riskLevel),
         riskScore: value.riskScore
     };
 }
-function from_candid_variant_n8(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+function from_candid_variant_n11(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     low: null;
 } | {
     high: null;
@@ -195,11 +204,18 @@ function from_candid_variant_n8(_uploadFile: (file: ExternalBlob) => Promise<Uin
 function to_candid_AssessmentInput_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: AssessmentInput): _AssessmentInput {
     return to_candid_record_n2(_uploadFile, _downloadFile, value);
 }
-function to_candid_RiskLevel_n9(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: RiskLevel): _RiskLevel {
-    return to_candid_variant_n10(_uploadFile, _downloadFile, value);
+function to_candid_BloodPressureType_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: BloodPressureType): _BloodPressureType {
+    return to_candid_variant_n5(_uploadFile, _downloadFile, value);
+}
+function to_candid_RiskLevel_n12(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: RiskLevel): _RiskLevel {
+    return to_candid_variant_n13(_uploadFile, _downloadFile, value);
 }
 function to_candid_record_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
     age: bigint;
+    bloodPressure?: {
+        value: bigint;
+        pressureType: BloodPressureType;
+    };
     smoking: Variant_none_current_former;
     symptomsFactor: {
         difficultySwallowing: boolean;
@@ -207,12 +223,16 @@ function to_candid_record_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
         cough: boolean;
         wheezing: boolean;
         shortnessOfBreath: boolean;
-        unexplainedWeightLoss: boolean;
+        unexplained_weight_loss: boolean;
         stridor: boolean;
     };
     gender: Variant_female_male;
 }): {
     age: bigint;
+    bloodPressure: [] | [{
+            value: bigint;
+            pressureType: _BloodPressureType;
+        }];
     smoking: {
         none: null;
     } | {
@@ -226,7 +246,7 @@ function to_candid_record_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
         cough: boolean;
         wheezing: boolean;
         shortnessOfBreath: boolean;
-        unexplainedWeightLoss: boolean;
+        unexplained_weight_loss: boolean;
         stridor: boolean;
     };
     gender: {
@@ -237,12 +257,25 @@ function to_candid_record_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8A
 } {
     return {
         age: value.age,
-        smoking: to_candid_variant_n3(_uploadFile, _downloadFile, value.smoking),
+        bloodPressure: value.bloodPressure ? candid_some(to_candid_record_n3(_uploadFile, _downloadFile, value.bloodPressure)) : candid_none(),
+        smoking: to_candid_variant_n6(_uploadFile, _downloadFile, value.smoking),
         symptomsFactor: value.symptomsFactor,
-        gender: to_candid_variant_n4(_uploadFile, _downloadFile, value.gender)
+        gender: to_candid_variant_n7(_uploadFile, _downloadFile, value.gender)
     };
 }
-function to_candid_variant_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: RiskLevel): {
+function to_candid_record_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    value: bigint;
+    pressureType: BloodPressureType;
+}): {
+    value: bigint;
+    pressureType: _BloodPressureType;
+} {
+    return {
+        value: value.value,
+        pressureType: to_candid_BloodPressureType_n4(_uploadFile, _downloadFile, value.pressureType)
+    };
+}
+function to_candid_variant_n13(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: RiskLevel): {
     low: null;
 } | {
     high: null;
@@ -257,7 +290,22 @@ function to_candid_variant_n10(_uploadFile: (file: ExternalBlob) => Promise<Uint
         moderate: null
     } : value;
 }
-function to_candid_variant_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Variant_none_current_former): {
+function to_candid_variant_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: BloodPressureType): {
+    systolic: null;
+} | {
+    diastolic: null;
+} | {
+    meanArterialPressure: null;
+} {
+    return value == BloodPressureType.systolic ? {
+        systolic: null
+    } : value == BloodPressureType.diastolic ? {
+        diastolic: null
+    } : value == BloodPressureType.meanArterialPressure ? {
+        meanArterialPressure: null
+    } : value;
+}
+function to_candid_variant_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Variant_none_current_former): {
     none: null;
 } | {
     current: null;
@@ -272,7 +320,7 @@ function to_candid_variant_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8
         former: null
     } : value;
 }
-function to_candid_variant_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Variant_female_male): {
+function to_candid_variant_n7(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: Variant_female_male): {
     female: null;
 } | {
     male: null;

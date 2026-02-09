@@ -1,99 +1,15 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-09T10:10:59.823Z",
-  "summary": "Diff adds a HeartSense AI app shell with routing, landing + assessment pages, a Motoko backend method, React Query hook, and a disclaimer component. However, the core CVD-specific assessment inputs and backend contract do not match the BuildRequest (missing BP/cholesterol/HDL/diabetes, wrong subtitle text, backend does not clamp score to 0–100 and returns non-string explanations). Static image assets are referenced but not shown as added under frontend/public/assets/generated.",
-  "missing_requirements": [
-    {
-      "id": "REQ-1",
-      "requirement": "Landing page subtitle must be “Smart CVD Risk Prediction” and include required sections (Overview, How it works, Disclaimer) with Start Assessment CTA.",
-      "reason": "Landing page subtitle text does not match the required subtitle; it uses “Smart Health Risk Prediction” instead of “Smart CVD Risk Prediction”.",
-      "evidence": [
-        "frontend/src/pages/LandingPage.tsx",
-        "frontend/src/components/AppHeader.tsx"
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "requirement": "Assessment form must include at minimum: age, sex, systolic blood pressure, total cholesterol, HDL cholesterol, smoking status, diabetes status, with client-side validation and inline errors.",
-      "reason": "Assessment form collects age, gender, smoking, and respiratory-symptom checkboxes; it does not include systolic blood pressure, total cholesterol, HDL cholesterol, or diabetes status fields/validation.",
-      "evidence": [
-        "frontend/src/pages/AssessmentPage.tsx"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "requirement": "Backend prediction API must accept the required CVD inputs and return deterministic { riskScore (0–100 clamped), riskLevel (Low/Moderate/High), explanation: string[] with at least 2 human-readable strings }.",
-      "reason": "Backend input type does not include BP/cholesterol/HDL/diabetes and instead includes a symptomsFactor structure; riskScore is not clamped to 0–100 (score can exceed 100); explanation is an array of RiskFactor records rather than an array of human-readable strings.",
-      "evidence": [
-        "backend/main.mo"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "requirement": "Connect form submission to backend prediction API using React Query and render results showing riskScore, riskLevel, explanation list, plus Start Over.",
-      "reason": "While React Query mutation and a Start Over handler exist, the connected API and payload are not the required CVD assessment inputs/contract (it calls calculateRisk with symptom-based inputs), so the required end-to-end CVD prediction flow is not implemented as specified.",
-      "evidence": [
-        "frontend/src/hooks/useQueries.ts",
-        "frontend/src/pages/AssessmentPage.tsx",
-        "backend/main.mo"
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "requirement": "Add generated static image assets (logo, hero illustration, and icons) under frontend/public/assets/generated and reference them in UI (logo in header, hero on landing).",
-      "reason": "UI references the logo and hero paths, but the diff summary does not show the required image files being added under frontend/public/assets/generated (and no evidence of the required icons asset).",
-      "evidence": [
-        "frontend/src/components/AppHeader.tsx",
-        "frontend/src/components/AppFooter.tsx",
-        "frontend/src/pages/LandingPage.tsx"
-      ]
-    }
-  ],
-  "hallucinated_features": [
-    {
-      "description": "Respiratory symptom-based assessment (cough/wheezing/shortness of breath/stridor/difficulty swallowing/weight loss/blood in sputum) instead of CVD risk-factor inputs.",
-      "reason": "BuildRequest specifies CVD risk factors (BP, cholesterol, HDL, smoking, diabetes, etc.); symptom checklist is not requested and shifts scope away from CVD inputs.",
-      "evidence": [
-        "frontend/src/pages/AssessmentPage.tsx",
-        "backend/main.mo"
-      ]
-    },
-    {
-      "description": "Backend API named calculateRisk with additional helper riskLevelToText and RiskFactor typed explanations (category/detail objects).",
-      "reason": "BuildRequest asks for a prediction method returning explanation as an array of human-readable strings; riskLevelToText and object-based explanation structure were not requested.",
-      "evidence": [
-        "backend/main.mo"
-      ]
-    },
-    {
-      "description": "Footer attribution/link to caffeine.ai and © 2026 copy.",
-      "reason": "Not requested by the BuildRequest requirements/acceptance criteria (footer only required to include project info and disclaimer reference).",
-      "evidence": [
-        "frontend/src/components/AppFooter.tsx"
-      ]
-    }
-  ],
-  "confidence": 0.84,
+  "generatedAt": "2026-02-09T11:35:55.223Z",
+  "summary": "REQ-19 appears fully implemented: the footer no longer hardcodes the incorrect LinkedIn URL, the LinkedIn link is conditionally rendered only when a valid URL is configured, and when shown it opens in a new tab with the required rel attributes. No changes were made under frontend/src/components/ui and no backend changes are indicated in the diff.",
+  "missing_requirements": [],
+  "hallucinated_features": [],
+  "confidence": 0.9,
   "changed_files": [
-    "all_files_summary.json",
-    "backend/main.mo",
     "frontend-file-summaries.txt",
-    "frontend/index.css",
-    "frontend/index.html",
-    "frontend/src/App.tsx",
     "frontend/src/components/AppFooter.tsx",
-    "frontend/src/components/AppHeader.tsx",
-    "frontend/src/components/AppLayout.tsx",
-    "frontend/src/components/Disclaimer.tsx",
-    "frontend/src/hooks/useActor.ts",
-    "frontend/src/hooks/useInternetIdentity.ts",
-    "frontend/src/hooks/useQueries.ts",
-    "frontend/src/index.css",
-    "frontend/src/main.tsx",
-    "frontend/src/pages/AssessmentPage.tsx",
-    "frontend/src/pages/LandingPage.tsx",
-    "frontend/tailwind.config.js",
+    "frontend/src/config/socialLinks.ts",
     "project_state.json"
   ]
 }

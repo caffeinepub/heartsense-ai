@@ -12,6 +12,9 @@ import type { Principal } from '@icp-sdk/core/principal';
 
 export interface AssessmentInput {
   'age' : bigint,
+  'bloodPressure' : [] | [
+    { 'value' : bigint, 'pressureType' : BloodPressureType }
+  ],
   'smoking' : { 'none' : null } |
     { 'current' : null } |
     { 'former' : null },
@@ -21,7 +24,7 @@ export interface AssessmentInput {
     'cough' : boolean,
     'wheezing' : boolean,
     'shortnessOfBreath' : boolean,
-    'unexplainedWeightLoss' : boolean,
+    'unexplained_weight_loss' : boolean,
     'stridor' : boolean,
   },
   'gender' : { 'female' : null } |
@@ -32,6 +35,9 @@ export interface AssessmentResult {
   'riskLevel' : RiskLevel,
   'riskScore' : bigint,
 }
+export type BloodPressureType = { 'systolic' : null } |
+  { 'diastolic' : null } |
+  { 'meanArterialPressure' : null };
 export interface RiskFactor { 'detail' : string, 'category' : string }
 export type RiskLevel = { 'low' : null } |
   { 'high' : null } |

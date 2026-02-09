@@ -8,8 +8,16 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const BloodPressureType = IDL.Variant({
+  'systolic' : IDL.Null,
+  'diastolic' : IDL.Null,
+  'meanArterialPressure' : IDL.Null,
+});
 export const AssessmentInput = IDL.Record({
   'age' : IDL.Nat,
+  'bloodPressure' : IDL.Opt(
+    IDL.Record({ 'value' : IDL.Nat, 'pressureType' : BloodPressureType })
+  ),
   'smoking' : IDL.Variant({
     'none' : IDL.Null,
     'current' : IDL.Null,
@@ -21,7 +29,7 @@ export const AssessmentInput = IDL.Record({
     'cough' : IDL.Bool,
     'wheezing' : IDL.Bool,
     'shortnessOfBreath' : IDL.Bool,
-    'unexplainedWeightLoss' : IDL.Bool,
+    'unexplained_weight_loss' : IDL.Bool,
     'stridor' : IDL.Bool,
   }),
   'gender' : IDL.Variant({ 'female' : IDL.Null, 'male' : IDL.Null }),
@@ -49,8 +57,16 @@ export const idlService = IDL.Service({
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const BloodPressureType = IDL.Variant({
+    'systolic' : IDL.Null,
+    'diastolic' : IDL.Null,
+    'meanArterialPressure' : IDL.Null,
+  });
   const AssessmentInput = IDL.Record({
     'age' : IDL.Nat,
+    'bloodPressure' : IDL.Opt(
+      IDL.Record({ 'value' : IDL.Nat, 'pressureType' : BloodPressureType })
+    ),
     'smoking' : IDL.Variant({
       'none' : IDL.Null,
       'current' : IDL.Null,
@@ -62,7 +78,7 @@ export const idlFactory = ({ IDL }) => {
       'cough' : IDL.Bool,
       'wheezing' : IDL.Bool,
       'shortnessOfBreath' : IDL.Bool,
-      'unexplainedWeightLoss' : IDL.Bool,
+      'unexplained_weight_loss' : IDL.Bool,
       'stridor' : IDL.Bool,
     }),
     'gender' : IDL.Variant({ 'female' : IDL.Null, 'male' : IDL.Null }),
