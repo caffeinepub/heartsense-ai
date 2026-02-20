@@ -1,4 +1,4 @@
-import { createRouter, RouterProvider, createRoute, createRootRoute, Outlet } from '@tanstack/react-router';
+import { createRouter, RouterProvider, createRoute, createRootRoute } from '@tanstack/react-router';
 import LandingPage from './pages/LandingPage';
 import AssessmentPage from './pages/AssessmentPage';
 import AppLayout from './components/AppLayout';

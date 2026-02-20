@@ -7,53 +7,68 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
-export interface AssessmentInput {
-    age: bigint;
-    bloodPressure?: {
-        value: bigint;
-        pressureType: BloodPressureType;
-    };
-    smoking: Variant_none_current_former;
-    symptomsFactor: {
-        difficultySwallowing: boolean;
-        bloodInSputum: boolean;
-        cough: boolean;
-        wheezing: boolean;
-        shortnessOfBreath: boolean;
-        unexplained_weight_loss: boolean;
-        stridor: boolean;
-    };
-    gender: Variant_female_male;
+export type UserId = Principal;
+export interface SymptomRespiratory {
+    cough: Variant_individual_family;
+    wheezing: Variant_individual_family;
+    shortnessOfBreath: Variant_individual_family;
+    stridorSeverity: Variant_individual_family;
+    hemoptysis: Variant_individual_family;
+    coughFrequency?: bigint;
 }
-export interface RiskFactor {
-    detail: string;
-    category: string;
+export interface SocialFactors {
+    alcohol: boolean;
+    diet: string;
+    exercise: string;
+    smoking: boolean;
 }
 export interface AssessmentResult {
-    explanation: Array<RiskFactor>;
+    suggestedTests: string;
+    clinicalImpression: string;
+    explanation: string;
+    lifestyleRecommendations: string;
     riskLevel: RiskLevel;
     riskScore: bigint;
 }
-export enum BloodPressureType {
-    systolic = "systolic",
-    diastolic = "diastolic",
-    meanArterialPressure = "meanArterialPressure"
+export interface AssessmentInput {
+    age: bigint;
+    socialFactors: SocialFactors;
+    respiratorySymptoms: SymptomRespiratory;
+    hypertension: boolean;
+    generalSymptoms: SymptomGeneral;
+    gender: Gender;
+    diabetes: boolean;
+}
+export interface SymptomGeneral {
+    pain: string;
+    weightLoss?: {
+        hasWeightLoss: boolean;
+        severity: string;
+    };
+}
+export type PatientId = bigint;
+export interface Patient {
+    id: PatientId;
+    registeredBy: UserId;
+    lastName: string;
+    firstName: string;
+}
+export enum Gender {
+    female = "female",
+    male = "male"
 }
 export enum RiskLevel {
     low = "low",
     high = "high",
     moderate = "moderate"
 }
-export enum Variant_female_male {
-    female = "female",
-    male = "male"
-}
-export enum Variant_none_current_former {
-    none = "none",
-    current = "current",
-    former = "former"
+export enum Variant_individual_family {
+    individual = "individual",
+    family = "family"
 }
 export interface backendInterface {
-    calculateRisk(assessmentInput: AssessmentInput): Promise<AssessmentResult>;
+    calculateRisk(patientId: PatientId, assessmentInput: AssessmentInput): Promise<AssessmentResult>;
+    getPatient(patientId: bigint): Promise<Patient>;
+    registerPatient(firstName: string, lastName: string): Promise<PatientId>;
     riskLevelToText(level: RiskLevel): Promise<string>;
 }

@@ -1,59 +1,71 @@
-import Iter "mo:core/Iter";
-import Order "mo:core/Order";
+import Map "mo:core/Map";
+import Principal "mo:core/Principal";
+import Set "mo:core/Set";
 import Runtime "mo:core/Runtime";
 
 actor {
-  type RiskLevel = { #low; #moderate; #high };
+  public type UserId = Principal;
+  public type PatientId = Nat;
+  var nextPatientId = 0;
 
-  type RiskFactor = {
-    category : Text;
-    detail : Text;
+  public type Patient = {
+    firstName : Text;
+    lastName : Text;
+    id : PatientId;
+    registeredBy : UserId;
   };
 
-  public type BloodPressureType = {
-    #systolic;
-    #diastolic;
-    #meanArterialPressure;
+  type Gender = { #male; #female };
+  type UserRole = { #clinician; #admin };
+
+  type SymptomRespiratory = {
+    coughFrequency : ?Nat;
+    cough : { #individual; #family };
+    shortnessOfBreath : { #individual; #family };
+    wheezing : { #individual; #family };
+    hemoptysis : { #individual; #family };
+    stridorSeverity : { #individual; #family };
+  };
+
+  type SymptomGeneral = {
+    weightLoss : ?{
+      hasWeightLoss : Bool;
+      severity : Text;
+    };
+    pain : Text;
+  };
+
+  type SocialFactors = {
+    smoking : Bool;
+    alcohol : Bool;
+    diet : Text;
+    exercise : Text;
   };
 
   type AssessmentInput = {
     age : Nat;
-    gender : { #male; #female };
-    smoking : { #none; #former; #current };
-    bloodPressure : ?{
-      pressureType : BloodPressureType;
-      value : Nat;
-    };
-    symptomsFactor : {
-      cough : Bool;
-      wheezing : Bool;
-      shortnessOfBreath : Bool;
-      stridor : Bool;
-      difficultySwallowing : Bool;
-      unexplained_weight_loss : Bool;
-      bloodInSputum : Bool;
-    };
+    gender : Gender;
+    respiratorySymptoms : SymptomRespiratory;
+    generalSymptoms : SymptomGeneral;
+    socialFactors : SocialFactors;
+    hypertension : Bool;
+    diabetes : Bool;
   };
 
-  public type AssessmentResult = {
+  type RiskLevel = { #low; #moderate; #high };
+
+  type AssessmentResult = {
     riskScore : Nat;
     riskLevel : RiskLevel;
-    explanation : [RiskFactor];
+    explanation : Text;
+    clinicalImpression : Text;
+    suggestedTests : Text;
+    lifestyleRecommendations : Text;
   };
 
-  module RiskLevel {
-    public func compare(level1 : RiskLevel, level2 : RiskLevel) : Order.Order {
-      switch (level1, level2) {
-        case (#low, #moderate) { #less };
-        case (#low, #high) { #less };
-        case (#moderate, #low) { #greater };
-        case (#moderate, #high) { #less };
-        case (#high, #low) { #greater };
-        case (#high, #moderate) { #greater };
-        case (_, _) { #equal };
-      };
-    };
-  };
+  let patients = Map.empty<PatientId, Patient>();
+  let userRoles = Map.empty<UserId, (PatientId, UserRole)>();
+  let activeClinicians = Set.empty<UserId>();
 
   public query ({ caller }) func riskLevelToText(level : RiskLevel) : async Text {
     switch (level) {
@@ -63,7 +75,56 @@ actor {
     };
   };
 
-  public shared ({ caller }) func calculateRisk(assessmentInput : AssessmentInput) : async AssessmentResult {
+  func initializeSystem(adminId : Principal) {
+    assignUserRole(adminId, 0, #admin);
+    activateClinician(adminId);
+    assignUserRole(adminId, 123, #clinician);
+    activateClinician(adminId);
+  };
+
+  func assignUserRole(userId : UserId, _id : PatientId, role : UserRole) {
+    if (userRoles.get(userId) == null) {
+      userRoles.add(userId, (0, role));
+    };
+  };
+
+  func activateClinician(clinicianId : UserId) {
+    activeClinicians.add(clinicianId);
+  };
+
+  public shared ({ caller }) func registerPatient(firstName : Text, lastName : Text) : async PatientId {
+    if (firstName == "" or lastName == "") {
+      Runtime.trap("Invalid first / last name");
+    };
+
+    let patient = {
+      firstName;
+      lastName;
+      id = nextPatientId;
+      registeredBy = caller;
+    };
+
+    patients.add(nextPatientId, patient);
+    let currentPatientId = nextPatientId;
+    nextPatientId += 1;
+    currentPatientId;
+  };
+
+  public query ({ caller }) func getPatient(patientId : Nat) : async Patient {
+    switch (patients.get(patientId)) {
+      case (?patient) { patient };
+      case (null) { Runtime.trap("Patient not found") };
+    };
+  };
+
+  public shared ({ caller }) func calculateRisk(
+    patientId : PatientId,
+    assessmentInput : AssessmentInput,
+  ) : async AssessmentResult {
+    if (patientId < 0 or patientId >= nextPatientId) {
+      Runtime.trap("Invalid patient ID");
+    };
+
     let ageFactor = if (assessmentInput.age >= 0 and assessmentInput.age <= 39) {
       0;
     } else if (assessmentInput.age >= 40 and assessmentInput.age <= 49) {
@@ -78,103 +139,90 @@ actor {
       Runtime.trap("Invalid age");
     };
 
-    let bloodPressureFactor : Nat = switch (assessmentInput.bloodPressure) {
-      case (null) { 0 };
-      case (?(bp)) {
-        switch (bp.pressureType) {
-          case (#systolic) {
-            if (bp.value > 140) { 2 } else { 0 };
-          };
-          case (#diastolic) {
-            if (bp.value > 90) { 2 } else { 0 };
-          };
-          case (#meanArterialPressure) {
-            if (bp.value > 100) { 2 } else { 0 };
-          };
-        };
-      };
+    let chronicConditionsFactor = if (assessmentInput.hypertension and assessmentInput.diabetes) {
+      3;
+    } else if (assessmentInput.hypertension or assessmentInput.diabetes) {
+      2;
+    } else {
+      0;
     };
 
-    let smokingFactor = switch (assessmentInput.smoking) {
-      case (#none) { 0 };
-      case (#former) { 1 };
-      case (#current) { 2 };
+    let smokingFactor = if (assessmentInput.socialFactors.smoking) { 2 } else {
+      0;
+    };
+
+    let genderFactor = switch (assessmentInput.gender) {
+      case (#male) { 1 };
+      case (#female) { 0 };
     };
 
     func boolToInt(b : Bool) : Nat {
       if (b) { 1 } else { 0 };
     };
 
-    let symptomsFactor = boolToInt(assessmentInput.symptomsFactor.cough) +
-      boolToInt(assessmentInput.symptomsFactor.wheezing) +
-      boolToInt(assessmentInput.symptomsFactor.shortnessOfBreath) +
-      boolToInt(assessmentInput.symptomsFactor.stridor) +
-      boolToInt(assessmentInput.symptomsFactor.difficultySwallowing);
-
-    func boolToTwo(b : Bool) : Nat {
-      if (b) { 2 } else { 0 };
+    func switchToInt(variant : { #individual; #family }) : Nat {
+      switch (variant) {
+        case (#individual) { 1 };
+        case (#family) { 1 };
+      };
     };
 
-    let highRiskSymptomsFactor = boolToTwo(assessmentInput.symptomsFactor.unexplained_weight_loss) +
-      boolToTwo(assessmentInput.symptomsFactor.bloodInSputum);
+    let highRiskSymptomsFactor =
+      boolToInt(assessmentInput.generalSymptoms.weightLoss != null) * 2 +
+      switchToInt(assessmentInput.respiratorySymptoms.hemoptysis) * 2 +
+      switchToInt(assessmentInput.respiratorySymptoms.stridorSeverity) * 2;
 
-    let totalRiskScore = (ageFactor + bloodPressureFactor + smokingFactor + symptomsFactor + highRiskSymptomsFactor) * 10;
+    let symptomsFactor =
+      switchToInt(assessmentInput.respiratorySymptoms.cough) +
+      switchToInt(assessmentInput.respiratorySymptoms.shortnessOfBreath) +
+      switchToInt(assessmentInput.respiratorySymptoms.wheezing);
 
-    let riskLevel = if (totalRiskScore >= 0 and totalRiskScore <= 40) {
-      #low;
-    } else if (totalRiskScore >= 41 and totalRiskScore <= 70) {
+    let totalRiskScore = (ageFactor + chronicConditionsFactor + smokingFactor + genderFactor + symptomsFactor + highRiskSymptomsFactor) * 10;
+    let normalizedRiskScore = if (totalRiskScore > 100) { 100 } else { totalRiskScore };
+
+    let riskLevel = if (normalizedRiskScore >= 0 and normalizedRiskScore <= 40) { #low } else if (normalizedRiskScore >= 41 and normalizedRiskScore <= 70) {
       #moderate;
-    } else {
-      #high;
+    } else { #high };
+
+    let explanation = "Risk factors considered: Age, Hypertension/Diabetes, Smoking, Gender, Symptoms (Mild: cough, breathlessness, wheezing, Severe: weight loss, blood in sputum, stridor severity).";
+
+    let clinicalImpression = switch (riskLevel) {
+      case (#low) { "Likely non-malignant cause. Consider lifestyle advice and watchful waiting." };
+      case (#moderate) {
+        "Possible early signs of respiratory distress. Further assessment recommended, including lung function tests and chest imaging. Consider referral to specialist if symptoms persist.";
+      };
+      case (#high) {
+        "Signs consistent with high risk of pulmonary fibrosis, cancer, or other serious pulmonary conditions. Immediate diagnostic tests and specialist consultation necessary.";
+      };
     };
 
-    let explanation = Iter.empty<RiskFactor>()
-      .concat(
-        if (ageFactor > 0) {
-          Iter.singleton({
-            category = "Age Factor";
-            detail = "Higher age increases risk";
-          });
-        } else { Iter.empty<RiskFactor>() }
-      )
-      .concat(
-        if (bloodPressureFactor > 0) {
-          Iter.singleton({
-            category = "Blood Pressure";
-            detail = "Higher blood pressure increases risk";
-          });
-        } else { Iter.empty<RiskFactor>() }
-      )
-      .concat(
-        if (smokingFactor > 0) {
-          Iter.singleton({
-            category = "Smoking History";
-            detail = "Current/Former smokers have higher risk";
-          });
-        } else { Iter.empty<RiskFactor>() }
-      )
-      .concat(
-        if (symptomsFactor > 0) {
-          Iter.singleton({
-            category = "Symptoms";
-            detail = "Certain symptoms increase risk";
-          });
-        } else { Iter.empty<RiskFactor>() }
-      )
-      .concat(
-        if (highRiskSymptomsFactor > 0) {
-          Iter.singleton({
-            category = "High Risk Symptoms";
-            detail = "Unplanned weight loss and blood in sputum are significant risk factors";
-          });
-        } else { Iter.empty<RiskFactor>() }
-      )
-      .toArray();
+    let suggestedTests = switch (riskLevel) {
+      case (#low) { "Basic blood work, chest X-ray if symptoms persist." };
+      case (#moderate) {
+        "Spirometry, complete pulmonary function tests, advanced chest imaging (CT scan), and blood work.";
+      };
+      case (#high) {
+        "Immediate advanced diagnostics (CT/MRI), bronchoscopy, biopsy if indicated, and comprehensive systemic evaluation.";
+      };
+    };
+
+    let lifestyleRecommendations = switch (riskLevel) {
+      case (#low) { "Encourage balanced diet, regular exercise, non-smoking, moderation in alcohol consumption, and stress management." };
+      case (#moderate) {
+        "Emphasize smoking cessation, dietary improvements (increase fruits, vegetables, and lean proteins), and regular physical activity.";
+      };
+      case (#high) {
+        "Prioritize respiratory health interventions (pulmonary rehabilitation, oxygen therapy), intensive dietary support, and mental health counseling.";
+      };
+    };
 
     {
-      riskScore = totalRiskScore;
+      riskScore = normalizedRiskScore;
       riskLevel;
       explanation;
+      clinicalImpression;
+      suggestedTests;
+      lifestyleRecommendations;
     };
   };
 };

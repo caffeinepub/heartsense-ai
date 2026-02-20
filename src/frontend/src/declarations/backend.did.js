@@ -8,35 +8,42 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
-export const BloodPressureType = IDL.Variant({
-  'systolic' : IDL.Null,
-  'diastolic' : IDL.Null,
-  'meanArterialPressure' : IDL.Null,
+export const PatientId = IDL.Nat;
+export const SocialFactors = IDL.Record({
+  'alcohol' : IDL.Bool,
+  'diet' : IDL.Text,
+  'exercise' : IDL.Text,
+  'smoking' : IDL.Bool,
 });
+export const SymptomRespiratory = IDL.Record({
+  'cough' : IDL.Variant({ 'individual' : IDL.Null, 'family' : IDL.Null }),
+  'wheezing' : IDL.Variant({ 'individual' : IDL.Null, 'family' : IDL.Null }),
+  'shortnessOfBreath' : IDL.Variant({
+    'individual' : IDL.Null,
+    'family' : IDL.Null,
+  }),
+  'stridorSeverity' : IDL.Variant({
+    'individual' : IDL.Null,
+    'family' : IDL.Null,
+  }),
+  'hemoptysis' : IDL.Variant({ 'individual' : IDL.Null, 'family' : IDL.Null }),
+  'coughFrequency' : IDL.Opt(IDL.Nat),
+});
+export const SymptomGeneral = IDL.Record({
+  'pain' : IDL.Text,
+  'weightLoss' : IDL.Opt(
+    IDL.Record({ 'hasWeightLoss' : IDL.Bool, 'severity' : IDL.Text })
+  ),
+});
+export const Gender = IDL.Variant({ 'female' : IDL.Null, 'male' : IDL.Null });
 export const AssessmentInput = IDL.Record({
   'age' : IDL.Nat,
-  'bloodPressure' : IDL.Opt(
-    IDL.Record({ 'value' : IDL.Nat, 'pressureType' : BloodPressureType })
-  ),
-  'smoking' : IDL.Variant({
-    'none' : IDL.Null,
-    'current' : IDL.Null,
-    'former' : IDL.Null,
-  }),
-  'symptomsFactor' : IDL.Record({
-    'difficultySwallowing' : IDL.Bool,
-    'bloodInSputum' : IDL.Bool,
-    'cough' : IDL.Bool,
-    'wheezing' : IDL.Bool,
-    'shortnessOfBreath' : IDL.Bool,
-    'unexplained_weight_loss' : IDL.Bool,
-    'stridor' : IDL.Bool,
-  }),
-  'gender' : IDL.Variant({ 'female' : IDL.Null, 'male' : IDL.Null }),
-});
-export const RiskFactor = IDL.Record({
-  'detail' : IDL.Text,
-  'category' : IDL.Text,
+  'socialFactors' : SocialFactors,
+  'respiratorySymptoms' : SymptomRespiratory,
+  'hypertension' : IDL.Bool,
+  'generalSymptoms' : SymptomGeneral,
+  'gender' : Gender,
+  'diabetes' : IDL.Bool,
 });
 export const RiskLevel = IDL.Variant({
   'low' : IDL.Null,
@@ -44,59 +51,104 @@ export const RiskLevel = IDL.Variant({
   'moderate' : IDL.Null,
 });
 export const AssessmentResult = IDL.Record({
-  'explanation' : IDL.Vec(RiskFactor),
+  'suggestedTests' : IDL.Text,
+  'clinicalImpression' : IDL.Text,
+  'explanation' : IDL.Text,
+  'lifestyleRecommendations' : IDL.Text,
   'riskLevel' : RiskLevel,
   'riskScore' : IDL.Nat,
 });
+export const UserId = IDL.Principal;
+export const Patient = IDL.Record({
+  'id' : PatientId,
+  'registeredBy' : UserId,
+  'lastName' : IDL.Text,
+  'firstName' : IDL.Text,
+});
 
 export const idlService = IDL.Service({
-  'calculateRisk' : IDL.Func([AssessmentInput], [AssessmentResult], []),
+  'calculateRisk' : IDL.Func(
+      [PatientId, AssessmentInput],
+      [AssessmentResult],
+      [],
+    ),
+  'getPatient' : IDL.Func([IDL.Nat], [Patient], ['query']),
+  'registerPatient' : IDL.Func([IDL.Text, IDL.Text], [PatientId], []),
   'riskLevelToText' : IDL.Func([RiskLevel], [IDL.Text], ['query']),
 });
 
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
-  const BloodPressureType = IDL.Variant({
-    'systolic' : IDL.Null,
-    'diastolic' : IDL.Null,
-    'meanArterialPressure' : IDL.Null,
+  const PatientId = IDL.Nat;
+  const SocialFactors = IDL.Record({
+    'alcohol' : IDL.Bool,
+    'diet' : IDL.Text,
+    'exercise' : IDL.Text,
+    'smoking' : IDL.Bool,
   });
+  const SymptomRespiratory = IDL.Record({
+    'cough' : IDL.Variant({ 'individual' : IDL.Null, 'family' : IDL.Null }),
+    'wheezing' : IDL.Variant({ 'individual' : IDL.Null, 'family' : IDL.Null }),
+    'shortnessOfBreath' : IDL.Variant({
+      'individual' : IDL.Null,
+      'family' : IDL.Null,
+    }),
+    'stridorSeverity' : IDL.Variant({
+      'individual' : IDL.Null,
+      'family' : IDL.Null,
+    }),
+    'hemoptysis' : IDL.Variant({
+      'individual' : IDL.Null,
+      'family' : IDL.Null,
+    }),
+    'coughFrequency' : IDL.Opt(IDL.Nat),
+  });
+  const SymptomGeneral = IDL.Record({
+    'pain' : IDL.Text,
+    'weightLoss' : IDL.Opt(
+      IDL.Record({ 'hasWeightLoss' : IDL.Bool, 'severity' : IDL.Text })
+    ),
+  });
+  const Gender = IDL.Variant({ 'female' : IDL.Null, 'male' : IDL.Null });
   const AssessmentInput = IDL.Record({
     'age' : IDL.Nat,
-    'bloodPressure' : IDL.Opt(
-      IDL.Record({ 'value' : IDL.Nat, 'pressureType' : BloodPressureType })
-    ),
-    'smoking' : IDL.Variant({
-      'none' : IDL.Null,
-      'current' : IDL.Null,
-      'former' : IDL.Null,
-    }),
-    'symptomsFactor' : IDL.Record({
-      'difficultySwallowing' : IDL.Bool,
-      'bloodInSputum' : IDL.Bool,
-      'cough' : IDL.Bool,
-      'wheezing' : IDL.Bool,
-      'shortnessOfBreath' : IDL.Bool,
-      'unexplained_weight_loss' : IDL.Bool,
-      'stridor' : IDL.Bool,
-    }),
-    'gender' : IDL.Variant({ 'female' : IDL.Null, 'male' : IDL.Null }),
+    'socialFactors' : SocialFactors,
+    'respiratorySymptoms' : SymptomRespiratory,
+    'hypertension' : IDL.Bool,
+    'generalSymptoms' : SymptomGeneral,
+    'gender' : Gender,
+    'diabetes' : IDL.Bool,
   });
-  const RiskFactor = IDL.Record({ 'detail' : IDL.Text, 'category' : IDL.Text });
   const RiskLevel = IDL.Variant({
     'low' : IDL.Null,
     'high' : IDL.Null,
     'moderate' : IDL.Null,
   });
   const AssessmentResult = IDL.Record({
-    'explanation' : IDL.Vec(RiskFactor),
+    'suggestedTests' : IDL.Text,
+    'clinicalImpression' : IDL.Text,
+    'explanation' : IDL.Text,
+    'lifestyleRecommendations' : IDL.Text,
     'riskLevel' : RiskLevel,
     'riskScore' : IDL.Nat,
   });
+  const UserId = IDL.Principal;
+  const Patient = IDL.Record({
+    'id' : PatientId,
+    'registeredBy' : UserId,
+    'lastName' : IDL.Text,
+    'firstName' : IDL.Text,
+  });
   
   return IDL.Service({
-    'calculateRisk' : IDL.Func([AssessmentInput], [AssessmentResult], []),
+    'calculateRisk' : IDL.Func(
+        [PatientId, AssessmentInput],
+        [AssessmentResult],
+        [],
+      ),
+    'getPatient' : IDL.Func([IDL.Nat], [Patient], ['query']),
+    'registerPatient' : IDL.Func([IDL.Text, IDL.Text], [PatientId], []),
     'riskLevelToText' : IDL.Func([RiskLevel], [IDL.Text], ['query']),
   });
 };

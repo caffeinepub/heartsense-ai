@@ -10,7 +10,7 @@ export function useCalculateRisk() {
       if (!actor) {
         throw new Error('Actor not initialized');
       }
-      return await actor.calculateRisk(input);
+      return await actor.calculateRisk(BigInt(0), input);
     },
   });
 }

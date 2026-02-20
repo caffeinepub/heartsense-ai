@@ -1,49 +1,40 @@
 {
   "kind": "build_request",
-  "title": "Update footer LinkedIn link to the correct account",
-  "priority": "normal",
+  "title": "Restore Version 6 codebase",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-19",
-      "text": "Update the Project Owner LinkedIn link in the footer to remove the incorrect LinkedIn URL currently pointing to \"https://www.linkedin.com/in/sunil-biradar\" and replace it with the user’s correct LinkedIn profile URL. If the correct URL is not yet provided at build time, hide the LinkedIn link entirely (do not render a broken/incorrect link) until a valid URL is configured.",
-      "target": "frontend",
+      "id": "REQ-1",
+      "text": "Revert the entire codebase to Version 6 state, discarding all changes made in versions 7 through 11",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-user-rollback-request"
         ],
         "quotes": [
-          "in the project the linkdin was not my account please remove and add my linkdin aaccount"
+          "i want old 6 the version of code",
+          "1"
         ]
       },
       "acceptanceCriteria": [
-        "The footer no longer contains any anchor tag with href=\"https://www.linkedin.com/in/sunil-biradar\".",
-        "If a valid replacement LinkedIn URL is configured, the footer LinkedIn button/link navigates to that URL in a new tab (target=\"_blank\" with rel=\"noopener noreferrer\").",
-        "If no replacement LinkedIn URL is configured, the LinkedIn icon/link is not shown in the footer (email link remains visible).",
-        "All user-facing text remains in English."
+        "All backend files match their Version 6 state exactly",
+        "All frontend files match their Version 6 state exactly",
+        "Version control reflects rollback to Version 6",
+        "No remnants of versions 7-11 remain in the codebase"
       ]
     }
   ],
   "constraints": [
-    "Do not edit any files under frontend/src/components/ui (Shadcn UI components are read-only).",
-    "Keep all backend logic in the single Motoko actor (no backend changes are required for this request)."
+    "Must restore complete Version 6 codebase without any modifications",
+    "Must not merge or cherry-pick features from versions 7-11"
   ],
   "nonGoals": [
-    "Do not change the project owner name or email address in the footer.",
-    "Do not add new authentication, analytics, or third-party integrations.",
-    "Do not modify landing/assessment page content beyond what is necessary to remove/replace the incorrect LinkedIn link."
+    "Deploying to production (user will decide deployment timing separately)",
+    "Preserving any features or changes from versions 7-11",
+    "Creating a hybrid version combining Version 6 with later changes"
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
-  },
-  "userProfileUpdate": {
-    "goalsToAdd": [],
-    "goalsToRemove": [],
-    "preferencesToAdd": [],
-    "preferencesToRemove": [],
-    "miscToAdd": [],
-    "miscToRemove": [],
-    "fieldsToSet": {},
-    "fieldsToDelete": []
   }
 }

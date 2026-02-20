@@ -1,11 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Correct the Project Owner LinkedIn link in the footer by removing the incorrect URL and only showing a LinkedIn link when a valid profile URL is configured.
+**Goal:** Restore the application codebase to Version 6 state.
 
 **Planned changes:**
-- Remove any footer link pointing to `https://www.linkedin.com/in/sunil-biradar`.
-- Add support for configuring the correct LinkedIn profile URL; if it is not configured/available, hide the LinkedIn icon/link in the footer (keep the email link visible).
-- When a valid LinkedIn URL is configured, ensure the footer link opens in a new tab with `target="_blank"` and `rel="noopener noreferrer"`.
+- Revert all backend files to their Version 6 state
+- Revert all frontend files to their Version 6 state
+- Discard all changes made in versions 7 through 11
 
-**User-visible outcome:** The footer no longer shows the wrong LinkedIn account; it either links to the correct LinkedIn profile (opening in a new tab) or hides the LinkedIn link entirely until a valid URL is provided.
+**User-visible outcome:** The application will function exactly as it did in Version 6, with all subsequent changes removed.

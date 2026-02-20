@@ -12,38 +12,61 @@ import type { Principal } from '@icp-sdk/core/principal';
 
 export interface AssessmentInput {
   'age' : bigint,
-  'bloodPressure' : [] | [
-    { 'value' : bigint, 'pressureType' : BloodPressureType }
-  ],
-  'smoking' : { 'none' : null } |
-    { 'current' : null } |
-    { 'former' : null },
-  'symptomsFactor' : {
-    'difficultySwallowing' : boolean,
-    'bloodInSputum' : boolean,
-    'cough' : boolean,
-    'wheezing' : boolean,
-    'shortnessOfBreath' : boolean,
-    'unexplained_weight_loss' : boolean,
-    'stridor' : boolean,
-  },
-  'gender' : { 'female' : null } |
-    { 'male' : null },
+  'socialFactors' : SocialFactors,
+  'respiratorySymptoms' : SymptomRespiratory,
+  'hypertension' : boolean,
+  'generalSymptoms' : SymptomGeneral,
+  'gender' : Gender,
+  'diabetes' : boolean,
 }
 export interface AssessmentResult {
-  'explanation' : Array<RiskFactor>,
+  'suggestedTests' : string,
+  'clinicalImpression' : string,
+  'explanation' : string,
+  'lifestyleRecommendations' : string,
   'riskLevel' : RiskLevel,
   'riskScore' : bigint,
 }
-export type BloodPressureType = { 'systolic' : null } |
-  { 'diastolic' : null } |
-  { 'meanArterialPressure' : null };
-export interface RiskFactor { 'detail' : string, 'category' : string }
+export type Gender = { 'female' : null } |
+  { 'male' : null };
+export interface Patient {
+  'id' : PatientId,
+  'registeredBy' : UserId,
+  'lastName' : string,
+  'firstName' : string,
+}
+export type PatientId = bigint;
 export type RiskLevel = { 'low' : null } |
   { 'high' : null } |
   { 'moderate' : null };
+export interface SocialFactors {
+  'alcohol' : boolean,
+  'diet' : string,
+  'exercise' : string,
+  'smoking' : boolean,
+}
+export interface SymptomGeneral {
+  'pain' : string,
+  'weightLoss' : [] | [{ 'hasWeightLoss' : boolean, 'severity' : string }],
+}
+export interface SymptomRespiratory {
+  'cough' : { 'individual' : null } |
+    { 'family' : null },
+  'wheezing' : { 'individual' : null } |
+    { 'family' : null },
+  'shortnessOfBreath' : { 'individual' : null } |
+    { 'family' : null },
+  'stridorSeverity' : { 'individual' : null } |
+    { 'family' : null },
+  'hemoptysis' : { 'individual' : null } |
+    { 'family' : null },
+  'coughFrequency' : [] | [bigint],
+}
+export type UserId = Principal;
 export interface _SERVICE {
-  'calculateRisk' : ActorMethod<[AssessmentInput], AssessmentResult>,
+  'calculateRisk' : ActorMethod<[PatientId, AssessmentInput], AssessmentResult>,
+  'getPatient' : ActorMethod<[bigint], Patient>,
+  'registerPatient' : ActorMethod<[string, string], PatientId>,
   'riskLevelToText' : ActorMethod<[RiskLevel], string>,
 }
 export declare const idlService: IDL.ServiceClass;

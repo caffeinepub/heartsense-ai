@@ -1,27 +1,122 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Update footer LinkedIn link configuration and hide when unset",
+  "title": "Restore Version 6 Frontend Codebase",
   "requirements": [
     {
-      "id": "REQ-19",
-      "summary": "Remove the incorrect hardcoded LinkedIn URL from the footer and render the LinkedIn link only when a valid replacement URL is configured.",
+      "id": "REQ-1",
+      "summary": "Revert all frontend files to their Version 6 state, removing all changes from versions 7-11",
       "acceptanceCriteria": [
-        "The footer no longer contains any anchor tag with href=\"https://www.linkedin.com/in/sunil-biradar\".",
-        "If a valid replacement LinkedIn URL is configured, the footer LinkedIn button/link navigates to that URL in a new tab (target=\"_blank\" with rel=\"noopener noreferrer\").",
-        "If no replacement LinkedIn URL is configured, the LinkedIn icon/link is not shown in the footer (email link remains visible).",
-        "All user-facing text remains in English."
+        "All frontend files match their Version 6 state exactly",
+        "No remnants of versions 7-11 remain in the codebase",
+        "Application renders and functions as it did in Version 6",
+        "All Version 6 routes and components are restored"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/config/socialLinks.ts",
-          "operation": "create",
-          "description": "Add a small configuration helper that reads a build-time LinkedIn URL (for example via a Vite env var) and validates it; export a safe value (undefined when missing/invalid) so the footer can hide the LinkedIn link when not configured."
+          "path": "frontend/index.html",
+          "operation": "modify",
+          "description": "Restore the index.html file to its Version 6 state, reverting any HTML structure, meta tags, or script references that were changed in versions 7-11"
+        },
+        {
+          "path": "frontend/src/main.tsx",
+          "operation": "modify",
+          "description": "Restore the main.tsx entry point to its Version 6 state, reverting any changes to providers, imports, or initialization logic introduced in versions 7-11"
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Restore the App.tsx root component to its Version 6 state, reverting routing configuration, layout structure, and any component composition changes from versions 7-11"
+        },
+        {
+          "path": "frontend/src/pages/LandingPage.tsx",
+          "operation": "modify",
+          "description": "Restore the LandingPage component to its Version 6 state, reverting any content, layout, or functionality changes made in versions 7-11"
+        },
+        {
+          "path": "frontend/src/pages/AssessmentPage.tsx",
+          "operation": "modify",
+          "description": "Restore the AssessmentPage component to its Version 6 state, reverting any form fields, validation logic, submission handling, or UI changes from versions 7-11"
+        },
+        {
+          "path": "frontend/src/components/AppLayout.tsx",
+          "operation": "modify",
+          "description": "Restore the AppLayout component to its Version 6 state, reverting any structural or composition changes made in versions 7-11"
+        },
+        {
+          "path": "frontend/src/components/AppHeader.tsx",
+          "operation": "modify",
+          "description": "Restore the AppHeader component to its Version 6 state, reverting any navigation, branding, or styling changes from versions 7-11"
         },
         {
           "path": "frontend/src/components/AppFooter.tsx",
           "operation": "modify",
-          "description": "Replace the hardcoded LinkedIn anchor (currently pointing to the incorrect URL) with conditional rendering driven by the configured/validated LinkedIn URL; ensure that when rendered it uses target=\"_blank\" and rel=\"noopener noreferrer\", and when not configured it does not render any LinkedIn link while keeping the email link unchanged."
+          "description": "Restore the AppFooter component to its Version 6 state, reverting any content, links, or styling changes made in versions 7-11"
+        },
+        {
+          "path": "frontend/src/components/Disclaimer.tsx",
+          "operation": "modify",
+          "description": "Restore the Disclaimer component to its Version 6 state, reverting any text, styling, or functionality changes from versions 7-11"
+        },
+        {
+          "path": "frontend/src/components/WatermarkGuard.tsx",
+          "operation": "modify",
+          "description": "Restore the WatermarkGuard component to its Version 6 state, or delete if it did not exist in Version 6"
+        },
+        {
+          "path": "frontend/src/hooks/useActor.ts",
+          "operation": "modify",
+          "description": "Restore the useActor hook to its Version 6 state, reverting any changes to actor creation, authentication handling, or query invalidation logic from versions 7-11"
+        },
+        {
+          "path": "frontend/src/hooks/useInternetIdentity.ts",
+          "operation": "modify",
+          "description": "Restore the useInternetIdentity hook to its Version 6 state, reverting any changes to authentication flow, identity management, or delegation handling from versions 7-11"
+        },
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Restore the useQueries hook to its Version 6 state, reverting any changes to mutation logic, query handling, or backend integration from versions 7-11"
+        },
+        {
+          "path": "frontend/src/config/socialLinks.ts",
+          "operation": "modify",
+          "description": "Restore the socialLinks configuration to its Version 6 state, reverting any changes to URL validation or environment variable handling from versions 7-11"
+        },
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Restore the index.css file to its Version 6 state, reverting any Tailwind configuration, CSS variables, theme colors, or custom styles added in versions 7-11"
+        },
+        {
+          "path": "frontend/index.css",
+          "operation": "modify",
+          "description": "Restore the root index.css file to its Version 6 state, reverting any global styles, Tailwind directives, or CSS variable definitions changed in versions 7-11"
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Restore the Tailwind configuration to its Version 6 state, reverting any theme extensions, color definitions, animation keyframes, or plugin configurations added in versions 7-11"
+        },
+        {
+          "path": "frontend/src/backend.d.ts",
+          "operation": "modify",
+          "description": "Restore the backend type definitions to their Version 6 state, reverting any interface changes, type additions, or enum modifications from versions 7-11"
+        },
+        {
+          "path": "frontend/public/assets/generated/heartsense-hero.dim_1600x900.png",
+          "operation": "delete",
+          "description": "Remove the generated hero image as it was not part of Version 6"
+        },
+        {
+          "path": "frontend/public/assets/generated/heartsense-icons.dim_512x512.png",
+          "operation": "delete",
+          "description": "Remove the generated icons image as it was not part of Version 6"
+        },
+        {
+          "path": "frontend/public/assets/generated/heartsense-logo.dim_512x512.png",
+          "operation": "delete",
+          "description": "Remove the generated logo image as it was not part of Version 6"
         }
       ]
     }
